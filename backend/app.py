@@ -32,10 +32,6 @@ app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173"])
 
 
-# ---------------------------------------------------------------------------
-# Model loading. A missing model does not crash the server: its endpoint just
-# answers 503 telling you which script to run.
-# ---------------------------------------------------------------------------
 def load_bundle(prefix):
     try:
         return {
@@ -69,9 +65,6 @@ def read_features(bundle, data):
     return {f: float(data[f]) for f in bundle["meta"]["features"]}
 
 
-# ---------------------------------------------------------------------------
-# Health check
-# ---------------------------------------------------------------------------
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({
@@ -84,9 +77,6 @@ def health():
     })
 
 
-# ---------------------------------------------------------------------------
-# Model 1: sales trend
-# ---------------------------------------------------------------------------
 MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -155,9 +145,7 @@ def predict_series():
     return jsonify({"forecast": forecast})
 
 
-# ---------------------------------------------------------------------------
-# Model 2: customer churn
-# ---------------------------------------------------------------------------
+
 @app.route("/predict-churn", methods=["POST"])
 def predict_churn():
     if CHURN is None:
@@ -177,9 +165,6 @@ def predict_churn():
     })
 
 
-# ---------------------------------------------------------------------------
-# Model 3: business health score
-# ---------------------------------------------------------------------------
 @app.route("/predict-health", methods=["POST"])
 def predict_health():
     if HEALTH is None:
